@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Albeda Kwalificatiedossier Viewer</title>
+  <style>
+    /* Albeda Huisstijl Variabelen */
+    :root {
+      --albeda-blue: #0a62af;
+      --albeda-light-blue: #85c9f0;
+      --albeda-orange: #f29400;
+      --albeda-gray: #d9d9d9;
+      --albeda-dark: #333333;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      color: var(--albeda-dark);
+      background-color: #f7f9fa;
+      line-height: 1.6;
+    }
+
+    /* Header & Logo Positionering (Label-stijl conform Brandbook) */
+    header {
+      background-color: var(--albeda-blue);
+      color: var(--white);
+      padding: 20px;
+      position: relative;
+      border-bottom: 5px solid var(--albeda-orange);
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo-label {
+      position: absolute;
+      top: 0;
+      right: 40px;
+      background: var(--white);
+      padding: 10px;
+      border-radius: 0 0 8px 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      max-width: 120px;
+    }
+
+    .logo-label img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .title-area h1 {
+      font-size: 1.8rem;
+      margin-bottom: 5px;
+    }
+
+    /* Doelgroep Filter Knoppen (UI) */
+    .role-selector {
+      max-width: 1200px;
+      margin: 30px auto 10px auto;
+      padding: 0 20px;
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .role-btn {
+      font-family: 'Arial', sans-serif;
+      font-weight: bold;
+      font-size: 1rem;
+      padding: 12px 24px;
+      border: 2px solid var(--albeda-blue);
+      background-color: var(--white);
+      color: var(--albeda-blue);
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+
+    .role-btn:hover, .role-btn.active {
+      background-color: var(--albeda-blue);
+      color: var(--white);
+      box-shadow: 0 4px 10px rgba(10, 98, 175, 0.2);
+    }
+
+    .role-btn.active {
+      border-color: var(--albeda-orange);
+    }
+
+    /* Dynamic Content Area */
+    main {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+
+    .intro-vlak {
+      background: var(--white);
+      border-left: 6px solid var(--albeda-orange);
+      padding: 20px;
+      margin-bottom: 25px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    /* Kaarten voor Kerntaken en Werkprocessen */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--albeda-gray);
+      border-radius: 4px;
+      margin-bottom: 20px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .card-header {
+      background-color: #f1f5f9;
+      padding: 15px 20px;
+      border-bottom: 2px solid var(--albeda-gray);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-header h2 {
+      color: var(--albeda-blue);
+      font-size: 1.3rem;
+    }
+
+    .badge {
+      background-color: var(--albeda-light-blue);
+      color: var(--albeda-blue);
+      padding: 4px 10px;
+      font-weight: bold;
+      font-size: 0.8rem;
+      border-radius: 12px;
+    }
+
+    .card-body {
+      padding: 20px;
+    }
+
+    .wp-block {
+      border-bottom: 1px solid var(--albeda-gray);
+      padding: 15px 0;
+    }
+
+    .wp-block:last-child {
+      border-bottom: none;
+    }
+
+    .wp-title {
+      font-size: 1.1rem;
+      color: #333;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .wp-title span {
+      font-weight: bold;
+      color: var(--albeda-orange);
+    }
+
+    /* Doelgroep-specifieke weergave elementen */
+    .student-view .meta-section, .student-view .desc-section { display: none; }
+    .pleider-view .meta-section, .pleider-view .behavior-section { display: none; }
+    .docent-view .behavior-section { display: block; }
+
+    .meta-vlak {
+      background-color: #fafbfc;
+      padding: 12px;
+      border: 1px dashed var(--albeda-blue);
+      margin-bottom: 15px;
+      font-size: 0.9rem;
+    }
+
+    ul.check-list {
+      list-style-type: none;
+    }
+
+    ul.check-list li {
+      position: relative;
+      padding-left: 20px;
+      margin-bottom: 5px;
+    }
+
+    ul.check-list li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--albeda-orange);
+      font-weight: bold;
+    }
+
+    .tag-container {
+      display: flex;
+      gap: 5px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      background: #e2e8f0;
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-container">
+      <div class="title-area">
+        <h1>Albeda Horecacollege</h1>
+        <p>Interactieve Kwalificatiedossier Viewer</p>
+      </div>
+      <!-- Het logo-label hangt aan de pagina conform Brandbook p.5 -->
+      <div class="logo-label">
+        <img src="LOGO.jpg" alt="Albeda Horecacollege Logo">
+      </div>
+    </div>
+  </header>
+
+  <!-- De Drie Ingangen/Filters -->
+  <div class="role-selector">
+    <button class="role-btn active" onclick="switchRole('student', this)">Ik ben Student</button>
+    <button class="role-btn" onclick="switchRole('pleider', this)">Ik ben Praktijkopleider</button>
+    <button class="role-btn" onclick="switchRole('docent', this)">Ik ben Docent</button>
+  </div>
+
+  <main id="app-container" class="student-view">
+    <!-- Introductietekst die dynamisch wisselt -->
+    <div class="intro-vlak" id="intro-text">
+      <strong>Welkom Student!</strong> Hieronder zie je direct welk gedrag er van je verwacht wordt tijdens je opleiding en welke competenties je gaat ontwikkelen in de praktijk.
+    </div>
+
+    <!-- Hier worden de kaarten gegenereerd -->
+    <div id="content-grid"></div>
+  </main>
+
+  <!-- Scripts inladen -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
