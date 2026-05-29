@@ -4,6 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Albeda Horecacollege - Kwalificatie Portaal</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" content="#f58220">
+  <meta name="apple-mobile-web-app-title" content="Albeda Horeca">
+  <meta name="application-name" content="Albeda Horeca">
   <style>
     /* ==========================================================================
        ALBEDA BRANDBOOK DESIGN SYSTEM & ADAPTIVE ARCHITECTURE
@@ -63,12 +69,17 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 20px;
+    }
+
+    .header-content {
+      min-width: 0;
     }
 
     .campaign-title {
       font-size: calc(1.6rem + 1vw);
       font-weight: 900;
-      letter-spacing: -1px;
+      letter-spacing: 0;
       text-transform: uppercase;
       margin-bottom: 5px;
       line-height: 1.2;
@@ -860,6 +871,38 @@
     }
 
     @media (max-width: 600px) {
+      header {
+        padding: 28px 0;
+      }
+
+      .header-layout {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+      }
+
+      .campaign-title {
+        font-size: 1.8rem;
+        line-height: 1.15;
+      }
+
+      .app-meta-subtitle {
+        font-size: 0.95rem;
+        line-height: 1.35;
+      }
+
+      .albeda-brand-label {
+        border-left: none;
+        padding-left: 0;
+        text-align: left;
+        align-self: flex-start;
+      }
+
+      .albeda-logo {
+        max-width: 108px;
+        padding: 6px;
+      }
+
       .footer-layout, .footer-col { display: block; width: 100%; text-align: left !important; }
       .footer-col:first-child { margin-bottom: 20px; }
     }

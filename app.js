@@ -5,6 +5,11 @@ let actieveRol = 'student';
 let matrixIsOpen = false;
 let actiefCurriculumProfielId = '';
 
+function scrollToPageTop() {
+  if (typeof window === 'undefined' || !window.scrollTo) return;
+  requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' }));
+}
+
 function openDomeinDashboard(domeinId) {
   actiefDomeinId = domeinId;
   matrixIsOpen = false;
@@ -52,6 +57,7 @@ function openDomeinDashboard(domeinId) {
   document.body.className = 'student-mode';
   resetRolKnoppen();
   renderDossierContent();
+  scrollToPageTop();
 }
 
 function sluitDashboardEnTerug() {
@@ -59,6 +65,7 @@ function sluitDashboardEnTerug() {
   document.getElementById('dashboard-layer').style.display = 'none';
   document.getElementById('curriculum-layer').style.display = 'none';
   document.getElementById('app-subtitle').innerText = 'Dossier- & BPV-Kompas Portaal';
+  scrollToPageTop();
 }
 
 function getCurriculumProfielen() {
@@ -92,6 +99,7 @@ function openCurriculumDashboard() {
   actiefCurriculumProfielId = profielen[0].profiel.id;
   select.value = actiefCurriculumProfielId;
   renderCurriculumContent();
+  scrollToPageTop();
 }
 
 function sluitCurriculumEnTerug() {
@@ -99,6 +107,7 @@ function sluitCurriculumEnTerug() {
   document.getElementById('dashboard-layer').style.display = 'none';
   document.getElementById('curriculum-layer').style.display = 'none';
   document.getElementById('app-subtitle').innerText = 'Dossier- & BPV-Kompas Portaal';
+  scrollToPageTop();
 }
 
 function switchCurriculumProfiel(profielId) {
