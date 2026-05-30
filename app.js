@@ -4,25 +4,65 @@ let actiefProfielId = '';
 let actieveRol = 'student';
 let matrixIsOpen = false;
 let actiefCurriculumProfielId = '';
+let documentViewerBlobUrl = '';
 
-function openDocumentViewer(event, documentUrl, titel) {
-  if (event) event.preventDefault();
-
-  const viewer = document.getElementById('document-viewer');
-  const frame = document.getElementById('document-viewer-frame');
-  const title = document.getElementById('document-viewer-title');
-  const external = document.getElementById('document-viewer-external');
-  if (!viewer || !frame || !external) {
-    window.open(documentUrl, '_blank', 'noopener');
-    return;
+function resetDocumentViewerSource() {
+  if (documentViewerBlobUrl && window.URL) {
+    URL.revokeObjectURL(documentViewerBlobUrl);
+    documentViewerBlobUrl = '';
   }
+}
 
-  frame.src = documentUrl;
-  external.href = documentUrl;
+function toonDocumentViewer(titel) {
+  const viewer = document.getElementById('document-viewer');
+  const title = document.getElementById('document-viewer-title');
+  if (!viewer) return false;
+
   if (title) title.innerText = titel || 'Document';
   viewer.classList.add('open');
   viewer.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
+  return true;
+}
+
+function openDocumentViewer(event, documentUrl, titel) {
+  if (event) event.preventDefault();
+
+  const frame = document.getElementById('document-viewer-frame');
+  const external = document.getElementById('document-viewer-external');
+  if (!frame || !external || !toonDocumentViewer(titel)) {
+    window.open(documentUrl, '_blank', 'noopener');
+    return;
+  }
+
+  resetDocumentViewerSource();
+  frame.removeAttribute('srcdoc');
+  frame.src = documentUrl;
+  external.href = documentUrl;
+}
+
+function openHtmlDocumentViewer(html, titel) {
+  const frame = document.getElementById('document-viewer-frame');
+  const external = document.getElementById('document-viewer-external');
+  if (!frame || !external || !toonDocumentViewer(titel)) {
+    const fallback = window.open('', '_blank', 'noopener');
+    if (fallback) {
+      fallback.document.write(html);
+      fallback.document.close();
+    }
+    return;
+  }
+
+  resetDocumentViewerSource();
+  frame.removeAttribute('src');
+  frame.srcdoc = html;
+
+  if (window.Blob && window.URL) {
+    documentViewerBlobUrl = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
+    external.href = documentViewerBlobUrl;
+  } else {
+    external.href = '#';
+  }
 }
 
 function closeDocumentViewer() {
@@ -32,13 +72,19 @@ function closeDocumentViewer() {
 
   viewer.classList.remove('open');
   viewer.setAttribute('aria-hidden', 'true');
-  if (frame) frame.src = 'about:blank';
+  if (frame) {
+    frame.removeAttribute('srcdoc');
+    frame.src = 'about:blank';
+  }
+  resetDocumentViewerSource();
   document.body.style.overflow = '';
 }
 
-window.addEventListener('keydown', event => {
-  if (event.key === 'Escape') closeDocumentViewer();
-});
+if (typeof window !== 'undefined') {
+  window.addEventListener('keydown', event => {
+    if (event.key === 'Escape') closeDocumentViewer();
+  });
+}
 function scrollToPageTop() {
   if (typeof window === 'undefined' || !window.scrollTo) return;
   requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' }));
@@ -634,98 +680,11 @@ function prepareAccordions() {
 function printBPVChecklist() {
   if (actiefDomeinId === 'generiek') return;
 
-  const { domein, profiel } = getActiefDomeinEnProfiel();
-  if (!domein || !profiel) return;
+  const { profiel } = getActiefDomeinEnProfiel();
+  if (!profiel) return;
 
-  const kerntaakSleutels = kwalificatieDossierDatabase.profielKerntaken[profiel.id] || [];
-  const datum = new Date().toLocaleDateString('nl-NL');
-  const sections = kerntaakSleutels.map(sleutel => {
-    const kerntaak = kwalificatieDossierDatabase.kerntakenDatabase[sleutel];
-    if (!kerntaak) return '';
-
-    const werkprocessen = (kerntaak.werkprocessen || []).map(wp => `
-      <tr>
-        <td class="code-cell">${wp.code}</td>
-        <td>
-          <strong>${wp.titel}</strong><br>
-          <span>${maakChecklistTekst(wp)}</span>
-        </td>
-        <td class="check-cell"></td>
-        <td class="note-cell"></td>
-      </tr>
-    `).join('');
-
-    return `
-      <section>
-        <h2>${kerntaak.code}: ${kerntaak.titel}</h2>
-        <p>${kerntaak.type}</p>
-        <table>
-          <thead>
-            <tr>
-              <th>Code</th>
-              <th>Werkproces</th>
-              <th>Aangetoond</th>
-              <th>Opmerking / bewijs</th>
-            </tr>
-          </thead>
-          <tbody>${werkprocessen}</tbody>
-        </table>
-      </section>
-    `;
-  }).join('');
-
-  const printVenster = window.open('', '_blank');
-  if (!printVenster) return;
-
-  printVenster.document.write(`
-    <!DOCTYPE html>
-    <html lang="nl">
-    <head>
-      <meta charset="UTF-8">
-      <title>BPV-checklist - ${profiel.naam}</title>
-      <style>
-        body { font-family: Arial, sans-serif; color: #222; margin: 28px; line-height: 1.35; }
-        .print-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; margin-bottom: 18px; }
-        .print-logo { width: 118px; height: auto; object-fit: contain; }
-        h1 { color: #0a62af; margin: 0 0 6px; }
-        h2 { color: #0a62af; font-size: 18px; margin: 24px 0 4px; }
-        .meta { margin-bottom: 20px; color: #555; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; table-layout: fixed; }
-        th { background: #0a62af; color: white; text-align: left; }
-        th, td { border: 1px solid #cbd5e1; padding: 8px; vertical-align: top; }
-        th:first-child { width: 118px; }
-        .code-cell { width: 118px; white-space: nowrap; font-weight: bold; color: #0a62af; }
-        .check-cell { width: 86px; }
-        .note-cell { width: 210px; }
-        .signature { margin-top: 32px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-        .line { border-top: 1px solid #222; padding-top: 6px; margin-top: 36px; }
-        @media print { body { margin: 14mm; } section { break-inside: avoid; } }
-      </style>
-    </head>
-    <body>
-      <div class="print-header">
-        <div>
-          <h1>BPV-checklist</h1>
-          <div class="meta">
-            <strong>Opleiding:</strong> ${profiel.naam} (${profiel.niveau})<br>
-            <strong>Domein:</strong> ${domein.titel}<br>
-            <strong>Crebo:</strong> ${profiel.crebo}<br>
-            <strong>Datum:</strong> ${datum}
-          </div>
-        </div>
-        <img class="print-logo" src="LOGO.jpg" alt="Albeda Horecacollege logo">
-      </div>
-      ${sections}
-      <div class="signature">
-        <div class="line">Student</div>
-        <div class="line">Praktijkopleider</div>
-      </div>
-    </body>
-    </html>
-  `);
-  printVenster.document.close();
-  printVenster.focus();
-  printVenster.print();
+  const checklistUrl = new URL(`bpv-checklists/${profiel.id}.pdf`, window.location.href);
+  openDocumentViewer(null, checklistUrl.href, `BPV-checklist - ${profiel.naam}`);
 }
 
 function renderDossierContent() {
@@ -769,7 +728,7 @@ function renderDossierContent() {
           Open / Download Dossier (PDF)
         </a>
         <button type="button" class="print-bpv-btn" onclick="printBPVChecklist()">
-          Print BPV-checklist
+          Open BPV-checklist
         </button>
       </div>
     `;
