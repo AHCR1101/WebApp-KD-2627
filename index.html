@@ -137,6 +137,60 @@
       border-radius: 0 4px 4px 0;
     }
 
+    .language-switcher {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .language-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      background: rgba(255, 255, 255, 0.18);
+      border-radius: 4px;
+      padding: 4px;
+      cursor: pointer;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .language-btn:hover,
+    .language-btn.active {
+      background: var(--white);
+      border-color: var(--albeda-orange);
+      transform: translateY(-1px);
+    }
+
+    .flag-icon {
+      width: 30px;
+      height: 20px;
+      display: inline-block;
+      border-radius: 2px;
+      border: 1px solid rgba(15, 23, 42, 0.18);
+      overflow: hidden;
+      flex: 0 0 auto;
+    }
+
+    .flag-nl {
+      background: linear-gradient(to bottom, #ae1c28 0 33.33%, #ffffff 33.33% 66.66%, #21468b 66.66% 100%);
+    }
+
+    .flag-uk {
+      background:
+        linear-gradient(27deg, transparent 41%, #ffffff 41% 46%, #c8102e 46% 54%, #ffffff 54% 59%, transparent 59%),
+        linear-gradient(153deg, transparent 41%, #ffffff 41% 46%, #c8102e 46% 54%, #ffffff 54% 59%, transparent 59%),
+        linear-gradient(to right, transparent 39%, #ffffff 39% 61%, transparent 61%),
+        linear-gradient(to bottom, transparent 36%, #ffffff 36% 64%, transparent 64%),
+        linear-gradient(to right, transparent 44%, #c8102e 44% 56%, transparent 56%),
+        linear-gradient(to bottom, transparent 42%, #c8102e 42% 58%, transparent 58%),
+        #012169;
+    }
+
+
     .landing-welcome h2 {
       color: var(--albeda-blue);
       font-size: 1.6rem;
@@ -1020,7 +1074,15 @@
         <div class="header-layout">
           <div class="header-content">
             <h1 class="campaign-title">Albeda <span>Horecacollege</span></h1>
-            <p id="app-subtitle" class="app-meta-subtitle">Dossier- & BPV-Kompas Portaal</p>
+            <p id="app-subtitle" class="app-meta-subtitle" data-i18n="appSubtitle">Dossier- & BPV-Kompas Portaal</p>
+            <div class="language-switcher" aria-label="Taal kiezen">
+              <button type="button" class="language-btn active" id="lang-nl" onclick="switchLanguage('nl')" aria-label="Nederlands" title="Nederlands">
+                <span class="flag-icon flag-nl" aria-hidden="true"></span>
+              </button>
+              <button type="button" class="language-btn" id="lang-en" onclick="switchLanguage('en')" aria-label="English" title="English">
+                <span class="flag-icon flag-uk" aria-hidden="true"></span>
+              </button>
+            </div>
           </div>
           <div class="albeda-brand-label">
             <img class="albeda-logo" src="LOGO.jpg" alt="Albeda Horecacollege logo">
@@ -1032,14 +1094,15 @@
     <!-- LANDINGS SCHERM -->
     <div id="landing-layer">
       <div class="container">
+
         <div class="landing-welcome">
-          <h2>Welkom bij het Onderwijs- & Kwalificatieportaal</h2>
-          <p>Dit interactieve portaal is speciaal ontwikkeld voor de modernisering van de horeca-opleidingen binnen het Albeda Horecacollege. Selecteer hieronder een van de hoofddomeinen of verplichte examenvakken om te starten:</p>
+          <h2 data-i18n="landingTitle">Welkom bij het Onderwijs- & Kwalificatieportaal</h2>
+          <p data-i18n="landingIntro">Dit interactieve portaal is speciaal ontwikkeld voor de modernisering van de horeca-opleidingen binnen het Albeda Horecacollege. Selecteer hieronder een van de hoofddomeinen of verplichte examenvakken om te starten:</p>
           
           <ul class="intro-opsomming">
-            <li><strong>De Student:</strong> Krijgt direct inzicht in het verwachte praktijkgedrag en de 'guest journey' tijdens de stageperiode;</li>
-            <li><strong>De Praktijkopleider:</strong> Ziet in een oogopslag de kerntaken en het concreet op te leveren resultaat op de werkvloer om studenten objectief te kunnen begeleiden;</li>
-            <li><strong>De Docent:</strong> Beschikt over de volledige onderwijskundige structuur, de formele complexiteit en de geverifieerde vakkennis per mbo-niveau.</li>
+            <li data-i18n-html="landingStudent"><strong>De Student:</strong> Krijgt direct inzicht in het verwachte praktijkgedrag en de 'guest journey' tijdens de stageperiode;</li>
+            <li data-i18n-html="landingTrainer"><strong>De Praktijkopleider:</strong> Ziet in een oogopslag de kerntaken en het concreet op te leveren resultaat op de werkvloer om studenten objectief te kunnen begeleiden;</li>
+            <li data-i18n-html="landingTeacher"><strong>De Docent:</strong> Beschikt over de volledige onderwijskundige structuur, de formele complexiteit en de geverifieerde vakkennis per mbo-niveau.</li>
           </ul>
         </div>
 
@@ -1053,12 +1116,12 @@
             <p>Crebo: 23426  Uitstroomprofielen mbo-niveau 2, 3 en 4</p>
           </div>
           <div class="domein-card" onclick="openDomeinDashboard('generiek')">
-            <h2>Generieke Onderdelen & Keuzedelen</h2>
-            <p>Wettelijke Exameneisen  Nederlands, Rekenen, LOB & Engels</p>
+            <h2 data-i18n="genericCardTitle">Generieke Onderdelen & Keuzedelen</h2>
+            <p data-i18n="genericCardText">Wettelijke Exameneisen  Nederlands, Rekenen, LOB & Engels</p>
           </div>
           <div class="domein-card" onclick="openCurriculumDashboard()">
-            <h2>Curriculum</h2>
-            <p>Leerjaren, onderwijsperiodes en schoolinhoud per opleiding</p>
+            <h2 data-i18n="curriculumTitle">Curriculum</h2>
+            <p data-i18n="curriculumCardText">Leerjaren, onderwijsperiodes en schoolinhoud per opleiding</p>
           </div>
         </div>
       </div>
@@ -1068,17 +1131,17 @@
     <div id="curriculum-layer">
       <div class="container">
         <div class="nav-row">
-          <button class="back-btn" onclick="sluitCurriculumEnTerug()"> Terug naar Hoofddomeinen</button>
+          <button class="back-btn" onclick="sluitCurriculumEnTerug()" data-i18n="backMain"> Terug naar Hoofddomeinen</button>
         </div>
 
         <div class="curriculum-intro">
-          <h2>Curriculum</h2>
-          <p>Kies een opleiding en bekijk per leerjaar en onderwijsperiode welke thema's, vaardigheden en gekoppelde werkprocessen centraal staan op school.</p>
+          <h2 data-i18n="curriculumTitle">Curriculum</h2>
+          <p data-i18n="curriculumIntro">Kies een opleiding en bekijk per leerjaar en onderwijsperiode welke thema's, vaardigheden en gekoppelde werkprocessen centraal staan op school.</p>
         </div>
 
         <div class="tool-grid">
           <div class="tool-block">
-            <div class="control-label">Kies opleiding:</div>
+            <div class="control-label" data-i18n="chooseProgramme">Kies opleiding:</div>
             <select id="dropdown-curriculum-profielen" onchange="switchCurriculumProfiel(this.value)"></select>
           </div>
         </div>
@@ -1092,32 +1155,32 @@
       <div class="container">
         
         <div class="nav-row">
-          <button class="back-btn" onclick="sluitDashboardEnTerug()"> Terug naar Hoofddomeinen</button>
-          <input type="text" id="live-search-box" class="search-input" placeholder="Live zoeken in dossier (bv. HACCP)..." oninput="executeLiveSearch()">
+          <button class="back-btn" onclick="sluitDashboardEnTerug()" data-i18n="backMain"> Terug naar Hoofddomeinen</button>
+          <input type="text" id="live-search-box" class="search-input" data-i18n-placeholder="searchPlaceholder" placeholder="Live zoeken in dossier (bv. HACCP)..." oninput="executeLiveSearch()">
         </div>
 
         <div class="tool-grid">
           <div class="tool-block">
-            <div class="control-label">Kies MBO-Opleiding / Uitstroom:</div>
+            <div class="control-label" data-i18n="chooseMbo">Kies MBO-Opleiding / Uitstroom:</div>
             <select id="dropdown-profielen" onchange="switchProfiel(this.value)"></select>
           </div>
           <div class="tool-block">
-            <div class="control-label">Niveau Vergelijker:</div>
-            <button class="matrix-btn" id="matrix-toggle-btn" onclick="toggleMatrixView()">Open Vergelijkingsmatrix</button>
+            <div class="control-label" data-i18n="levelCompare">Niveau Vergelijker:</div>
+            <button class="matrix-btn" id="matrix-toggle-btn" onclick="toggleMatrixView()" data-i18n="openMatrix">Open Vergelijkingsmatrix</button>
           </div>
         </div>
 
         <div id="matrix-panel">
-          <h3>Vergelijkingsmatrix MBO-Niveaus</h3>
-          <p style="font-size:0.85rem; color:#666; margin-bottom:10px;">Vergelijk direct de stijging in complexiteit en verschuiving in verantwoordelijkheid tussen de uitstroomprofielen.</p>
+          <h3 data-i18n="matrixTitle">Vergelijkingsmatrix MBO-Niveaus</h3>
+          <p style="font-size:0.85rem; color:#666; margin-bottom:10px;" data-i18n="matrixIntro">Vergelijk direct de stijging in complexiteit en verschuiving in verantwoordelijkheid tussen de uitstroomprofielen.</p>
           <div id="matrix-table-render-target"></div>
         </div>
 
-        <div class="control-label">Kies uw rol (Invalshoek):</div>
+        <div class="control-label" data-i18n="chooseRole">Kies uw rol (Invalshoek):</div>
         <div class="btn-group">
-          <button class="role-btn active" id="btn-student" onclick="switchRoleView('student', this)">Ik ben Student</button>
-          <button class="role-btn" onclick="switchRoleView('pleider', this)">Ik ben Praktijkopleider</button>
-          <button class="role-btn" onclick="switchRoleView('docent', this)">Ik ben Docent</button>
+          <button class="role-btn active" id="btn-student" onclick="switchRoleView('student', this)" data-i18n="roleStudentBtn">Ik ben Student</button>
+          <button class="role-btn" onclick="switchRoleView('pleider', this)" data-i18n="roleTrainerBtn">Ik ben Praktijkopleider</button>
+          <button class="role-btn" onclick="switchRoleView('docent', this)" data-i18n="roleTeacherBtn">Ik ben Docent</button>
         </div>
 
         <div class="intro-box" id="role-intro-text">
@@ -1135,8 +1198,8 @@
       <div class="document-viewer-bar">
         <div id="document-viewer-title" class="document-viewer-title">Document</div>
         <div class="document-viewer-actions">
-          <button type="button" class="document-viewer-close" onclick="closeDocumentViewer()">Terug naar app</button>
-          <a id="document-viewer-external" class="document-viewer-external" href="#" target="_blank" rel="noopener">Open extern</a>
+          <button type="button" class="document-viewer-close" onclick="closeDocumentViewer()" data-i18n="backToApp">Terug naar app</button>
+          <a id="document-viewer-external" class="document-viewer-external" href="#" target="_blank" rel="noopener" data-i18n="openExternal">Open extern</a>
         </div>
       </div>
       <iframe id="document-viewer-frame" class="document-viewer-frame" title="Documentweergave"></iframe>
@@ -1154,14 +1217,14 @@
           </p>
         </div>
         <div class="footer-col right">
-          <p class="footer-title">Disclaimer & Info</p>
+          <p class="footer-title" data-i18n="footerInfoTitle">Disclaimer & Info</p>
           <p class="footer-text">
-            Dit portaal dient ter ondersteuning van studenten, docenten en praktijkopleiders tijdens de beroepspraktijkvorming (BPV). De getoonde kerntaken en geverifieerde werkprocessen zijn gebaseerd op de formele, landelijk vastgestelde kwalificatiedossiers.
+            <span data-i18n="footerDisclaimer">Dit portaal dient ter ondersteuning van studenten, docenten en praktijkopleiders tijdens de beroepspraktijkvorming (BPV). De getoonde kerntaken en geverifieerde werkprocessen zijn gebaseerd op de formele, landelijk vastgestelde kwalificatiedossiers.</span>
           </p>
         </div>
       </div>
       <div class="footer-meta">
-        &copy; <span id="footer-year">2026</span> Albeda Horecacollege. Alle rechten voorbehouden.
+        &copy; <span id="footer-year">2026</span> <span data-i18n="footerRights">Albeda Horecacollege. Alle rechten voorbehouden.</span>
       </div>
     </div>
   </footer>
