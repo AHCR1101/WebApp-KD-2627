@@ -175,21 +175,6 @@
       flex: 0 0 auto;
     }
 
-    .flag-nl {
-      background: linear-gradient(to bottom, #ae1c28 0 33.33%, #ffffff 33.33% 66.66%, #21468b 66.66% 100%);
-    }
-
-    .flag-uk {
-      background:
-        linear-gradient(27deg, transparent 41%, #ffffff 41% 46%, #c8102e 46% 54%, #ffffff 54% 59%, transparent 59%),
-        linear-gradient(153deg, transparent 41%, #ffffff 41% 46%, #c8102e 46% 54%, #ffffff 54% 59%, transparent 59%),
-        linear-gradient(to right, transparent 39%, #ffffff 39% 61%, transparent 61%),
-        linear-gradient(to bottom, transparent 36%, #ffffff 36% 64%, transparent 64%),
-        linear-gradient(to right, transparent 44%, #c8102e 44% 56%, transparent 56%),
-        linear-gradient(to bottom, transparent 42%, #c8102e 42% 58%, transparent 58%),
-        #012169;
-    }
-
 
     .landing-welcome h2 {
       color: var(--albeda-blue);
@@ -1077,10 +1062,10 @@
             <p id="app-subtitle" class="app-meta-subtitle" data-i18n="appSubtitle">Dossier- & BPV-Kompas Portaal</p>
             <div class="language-switcher" aria-label="Taal kiezen">
               <button type="button" class="language-btn active" id="lang-nl" onclick="switchLanguage('nl')" aria-label="Nederlands" title="Nederlands">
-                <span class="flag-icon flag-nl" aria-hidden="true"></span>
+                <img class="flag-icon" src="vlag-ned.jpeg" alt="">
               </button>
               <button type="button" class="language-btn" id="lang-en" onclick="switchLanguage('en')" aria-label="English" title="English">
-                <span class="flag-icon flag-uk" aria-hidden="true"></span>
+                <img class="flag-icon" src="vlag-eng.jpeg" alt="">
               </button>
             </div>
           </div>
